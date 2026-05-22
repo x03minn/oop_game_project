@@ -1,7 +1,10 @@
 package com.oop.game
 
 import com.badlogic.gdx.Game
-import com.oop.game.example.ExampleWorld
+import com.oop.game.system.DifficultySystem
+import com.oop.game.world.DifficultyWorld
+import com.oop.game.world.MenuWorld
+import com.oop.game.world.PlayWorld
 
 /**
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -34,13 +37,13 @@ class OopGame : Game() {
 
     // 화면(창) 크기 — DesktopLauncher 가 창 크기 설정에도 이 값을 읽어간다.
     //   public(기본)으로 둔 이유: 외부(DesktopLauncher)에서 접근해야 하므로.
-    val screenWidth = 480
-    val screenHeight = 640
+    val screenWidth = 960
+    val screenHeight = 1280
 
     // 월드 크기 — 화면의 1.5배. 카메라(WASD)로 탐험 가능한 영역.
     //   이 값은 내부 설정이므로 private.
-    private val worldWidth = 720
-    private val worldHeight = 960
+    private val worldWidth = 2880
+    private val worldHeight = 3840
 
     /**
      * LibGDX 가 게임 시작 시 한 번 호출하는 라이프사이클 메서드.
@@ -56,12 +59,54 @@ class OopGame : Game() {
      *  GameWorld 가 LibGDX 의 Screen 인터페이스를 상속하므로 setScreen 인자로 넘길 수 있다.
      */
     override fun create() {
-        val firstWorld = ExampleWorld(
+
+        // 메인 메뉴를 첫 화면으로 설정(MenuWorld 에서 game.startGame() 호출 가능하도록 OopGame 넘김)
+        setScreen(MenuWorld(this))
+    }
+
+    //난이도 선택 메뉴
+    fun openDifficultyMenu(){
+        setScreen(DifficultyWorld(this))
+    }
+
+    /**
+     * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     * 게임 시작 메서드
+     * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     * MenuWorld 에서 게임 시작 버튼을 누르면 호출된다
+     * PlayWorld 를 생성해 현재 화면으로 전환한다
+     */
+    fun startGame(difficultySystem: DifficultySystem) {
+
+        // PlayWorld 생성(화면 크기와 월드 크기 전달)
+        val playWorld = PlayWorld(
             screenWidth = screenWidth.toFloat(),
             screenHeight = screenHeight.toFloat(),
             worldWidth = worldWidth.toFloat(),
-            worldHeight = worldHeight.toFloat()
+            worldHeight = worldHeight.toFloat(),
+            difficultySystem = difficultySystem
         )
-        setScreen(firstWorld)   // 부모 Game 이 제공하는 메서드
+
+        // 현재 화면을 PlayWorld 로 전환(부모 Game 이 제공하는 메서드)
+        setScreen(playWorld)
+    }
+
+
+
+    /**
+     * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     * 자원 해제
+     * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     * 앱이 종료될 때 현재 화면의 자원을 해제한다
+     */
+    override fun dispose() {
+
+        // 현재 화면이 있으면 자원 해제
+        if (screen != null) {
+            screen.dispose()
+        }
+
+        // 부모 dispose 호출
+        super.dispose()
     }
 }
