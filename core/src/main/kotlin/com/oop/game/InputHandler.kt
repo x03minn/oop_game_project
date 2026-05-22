@@ -44,17 +44,31 @@ object InputHandler {
         return Gdx.input.isKeyJustPressed(key)
     }
 
+    /**
+     * 마우스 클릭이 현재 '눌려 있는 중' 인지 - 꾹 누르고 있으면 매 프레임 true.
+     *   총알 발사에 사용
+     */
+    fun isMouseButtonPressed(button: Int): Boolean {
+        return Gdx.input.isButtonPressed(button)
+    }
+
+    // 현재 카매라 기준 마우스의 x좌표값
+    fun getMouseX(): Float = Gdx.input.x.toFloat()
+
+    // 현재 카매라 기준 마우스의 y좌표값
+    fun getMouseY(): Float = (Gdx.graphics.height - Gdx.input.y).toFloat()
+
     // 자주 쓰는 키 상수를 짧은 이름으로 재노출.
     //   원본은 Input.Keys.LEFT 처럼 길어서 자주 쓸수록 번거롭다.
     //   필요하면 Input.Keys.XXX 에서 다른 키를 직접 import 해서 써도 된다.
-    val LEFT = Input.Keys.LEFT
-    val RIGHT = Input.Keys.RIGHT
-    val UP = Input.Keys.UP
-    val DOWN = Input.Keys.DOWN
-    val SPACE = Input.Keys.SPACE
-    val ESCAPE = Input.Keys.ESCAPE
-    val W = Input.Keys.W
-    val A = Input.Keys.A
-    val S = Input.Keys.S
-    val D = Input.Keys.D
+    const val LEFT = Input.Keys.LEFT
+    const val RIGHT = Input.Keys.RIGHT
+    const val UP = Input.Keys.UP
+    const val DOWN = Input.Keys.DOWN
+    const val ESCAPE = Input.Keys.ESCAPE
+    const val W = Input.Keys.W
+    const val A = Input.Keys.A
+    const val S = Input.Keys.S
+    const val D = Input.Keys.D
+    const val LEFT_BUTTON = Input.Buttons.LEFT
 }
