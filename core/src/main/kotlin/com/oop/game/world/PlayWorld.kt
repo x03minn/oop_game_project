@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.oop.game.system.DifficultySystem
+import com.oop.game.OopGame
 import com.oop.game.GameWorld
 import com.oop.game.InputHandler
 import com.oop.game.entity.Player
@@ -24,6 +25,7 @@ import com.oop.game.entity.item.Heart
 import com.oop.game.entity.item.Booster
 import kotlin.math.floor
 import kotlin.random.Random
+
 
 /**
  * ════════════════════════════════════════════════════════════
@@ -61,6 +63,7 @@ import kotlin.random.Random
  * @param worldHeight  월드 전체 높이
  */
 class PlayWorld (
+    private val game: OopGame,
     screenWidth: Float,
     screenHeight: Float,
     worldWidth: Float,
@@ -76,7 +79,7 @@ class PlayWorld (
     // 게임의 상태는 | 1. 시작 메뉴 | 2. 게임 중 | 3. 레벨 업 | 4. 게임 오버 |
     private enum class GameState {
         IN_PLAY,
-        //LEVEL_UP,
+        Level_UP,
         GAME_OVER
     }
 
@@ -324,6 +327,7 @@ class PlayWorld (
         super.update(delta)
         when (state) {
             GameState.IN_PLAY -> updateInPlay(delta)
+            GameState.Level_UP -> {}
             GameState.GAME_OVER -> updateGameOver()
         }
     }
@@ -539,6 +543,11 @@ class PlayWorld (
                 player.speed = player.defaultSpeed
             }
         }
+        if (player.isLevelUpReady){
+            state = GameState.Level_UP
+            game.openLevelUpMenu()
+            return
+        }
     }
 
     /** GAME_OVER 상태에서 매 프레임 처리 — ESC 입력만 감시한다. */
@@ -606,6 +615,7 @@ class PlayWorld (
                 // 플레이 중에는 추가로 그릴 것 없음
             }
             GameState.GAME_OVER -> drawGameOverOverlay()
+            GameState.Level_UP -> {}
         }
     }
 

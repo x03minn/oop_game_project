@@ -5,6 +5,7 @@ import com.oop.game.system.DifficultySystem
 import com.oop.game.world.DifficultyWorld
 import com.oop.game.world.MenuWorld
 import com.oop.game.world.PlayWorld
+import com.oop.game.world.LevelUpWorld
 
 /**
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -45,6 +46,9 @@ class OopGame : Game() {
     private val worldWidth = 2880
     private val worldHeight = 3840
 
+
+    private var currentPlayWorld: PlayWorld? = null
+
     /**
      * LibGDX 가 게임 시작 시 한 번 호출하는 라이프사이클 메서드.
      *
@@ -80,14 +84,22 @@ class OopGame : Game() {
 
         // PlayWorld 생성(화면 크기와 월드 크기 전달)
         val playWorld = PlayWorld(
+            game = this,
             screenWidth = screenWidth.toFloat(),
             screenHeight = screenHeight.toFloat(),
             worldWidth = worldWidth.toFloat(),
             worldHeight = worldHeight.toFloat(),
             difficultySystem = difficultySystem
         )
-
+        currentPlayWorld = playWorld
         // 현재 화면을 PlayWorld 로 전환(부모 Game 이 제공하는 메서드)
+        setScreen(playWorld)
+    }
+    fun openLevelUpMenu() {
+        setScreen(LevelUpWorld(this))
+    }
+    fun returnToPlayWorld() {
+        val playWorld = currentPlayWorld?: return
         setScreen(playWorld)
     }
 
