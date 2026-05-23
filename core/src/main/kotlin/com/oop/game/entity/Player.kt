@@ -53,6 +53,9 @@ class Player(
     // 다음 레벨까지 채워야하는 경험치 양(난도 별로 다름)
     var expMax: Float = difficultySystem.playerExpMax
 
+    // 레벨업 시 경험치 양의 증가량
+    var expIncrease: Float = difficultySystem.expIncrease
+
     // 플레이어가 레벨업 했다는 신호
     var isLevelUpReady: Boolean = false
 
@@ -80,7 +83,7 @@ class Player(
         exp -= expMax
 
         // 다음 레벨 까지 얻어야 하는 경험치 양 증가
-        expMax *= 1.2f
+        expMax *= expIncrease
 
         // 플레이어의 현재 레벨 증가
         level++

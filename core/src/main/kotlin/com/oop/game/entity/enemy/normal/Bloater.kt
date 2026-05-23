@@ -133,7 +133,7 @@ class Bloater(
             }
 
             // 플레이어가 얻는 경험치 양
-            player.gainExp(8f)
+            player.gainExp(15f)
         }
     }
 
