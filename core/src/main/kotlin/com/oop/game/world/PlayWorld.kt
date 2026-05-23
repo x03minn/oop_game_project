@@ -337,11 +337,15 @@ class PlayWorld (
         // 타이머 시간 정수화
         timer = timeFloat.toInt()
 
+        // 플레이어 객체를 월드 경계 안쪽으로 가두기
+        player.x = player.x.coerceIn(0f, worldWidth - player.width)
+        player.y = player.y.coerceIn(0f, worldHeight - player.height)
+
         // ── 카메라 이동 (항상 플레이어를 중앙에 위치하도록 이동) ──
         //   offsetX/Y 를 바꾸면 카메라가 월드 안에서 움직인다.
         // 플레이어의 좌표에서 창의 절반을 빼줘서 플레이어를 중앙에 오게 만듬
-        offsetX = player.x - screenWidth / 2
-        offsetY = player.y - screenHeight / 2
+        offsetX = (player.x + 25f) - screenWidth / 2
+        offsetY = (player.y + 25f) - screenHeight / 2
 
         // 카메라가 월드 경계 밖을 보여주지 않도록 clamp.
         //   보여주는 영역이 [offset, offset+screen] 이어야 하므로
@@ -635,7 +639,7 @@ class PlayWorld (
 
         drawTextOnScreen(
             text = "Kill: ${Count.killPoint}",
-            x = 280f,
+            x = 270f,
             y = screenHeight - 10f,
             color = Color.GREEN,
             scale = 1.2f

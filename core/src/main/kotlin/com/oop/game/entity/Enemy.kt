@@ -87,8 +87,8 @@ abstract class Enemy(
     override fun update(delta: Float) {
 
         // 적 위치에서 플레이어 방향으로의 단위 벡터 계산
-        // Vector2(플레이어x - 적x, 플레이어y - 적y) → nor()로 정규화하여 방향만 추출
-        val dir = Vector2(player.x - x, player.y - y).nor()
+        // Vector2(플레이어x + 25f - 적x, 플레이어y + 25f - 적y) → nor()로 정규화하여 방향만 추출
+        val dir = Vector2((player.x + 25f) - x, (player.y + 25) - y).nor()
 
         // 적의 x축 이동
         x += dir.x * speed * delta

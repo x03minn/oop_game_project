@@ -58,7 +58,7 @@ class Bullet(
     var speed: Float = 1000f
 
     // 총알의 이동 방향(총알의 방향 단위 벡터)
-    val dir: Vector2 = Vector2(mouseX - playerX, mouseY - playerY).nor()
+    val dir: Vector2 = Vector2(mouseX - (playerX + 25f), mouseY - (playerY + 25f)).nor()
 
     // 총알이 월드 맵 경계에 도달 했는지 판단
     var isOutOfBounds: Boolean = false
