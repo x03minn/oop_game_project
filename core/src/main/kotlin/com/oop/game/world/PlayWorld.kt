@@ -550,6 +550,12 @@ class PlayWorld (
         }
     }
 
+    //레벨업 state에서 벗어나는 함수
+    fun finishLevelUp(){
+        player.isLevelUpReady = false
+        state = GameState.IN_PLAY
+    }
+
     /** GAME_OVER 상태에서 매 프레임 처리 — ESC 입력만 감시한다. */
     private fun updateGameOver() {
         // ESC 키가 '막 눌린 순간' 앱 종료.

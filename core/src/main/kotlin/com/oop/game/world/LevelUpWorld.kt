@@ -136,17 +136,17 @@ class LevelUpWorld(
 
             // 공격력 상승 버튼 클릭 시
             if (isInside(mouseX, mouseY, powerX, powerY)) {
-                game.startGame(DifficultySystem.Easy)
+                game.returnToPlayWorld()
                 return
             }
             // 공속 상승 버튼 클릭 시
             if (isInside(mouseX, mouseY, attackSpeedX, attackSpeedY)) {
-                game.startGame(DifficultySystem.Normal)
+                game.returnToPlayWorld()
                 return
             }
             // 총알 갯수 상승 버튼 클릭 시
             if (isInside(mouseX, mouseY, bulletAmountX, bulletAmountY)) {
-                game.startGame(DifficultySystem.Hard)
+                game.returnToPlayWorld()
                 return
             }
         }

@@ -100,6 +100,7 @@ class OopGame : Game() {
     }
     fun returnToPlayWorld() {
         val playWorld = currentPlayWorld?: return
+        playWorld.finishLevelUp()
         setScreen(playWorld)
     }
 
