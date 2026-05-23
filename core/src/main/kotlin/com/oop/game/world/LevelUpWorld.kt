@@ -137,20 +137,25 @@ class LevelUpWorld(
 
             // 공격력 상승 버튼 클릭 시
             if (isInside(mouseX, mouseY, powerX, powerY)) {
+
+                // 총알 데미지 증가
                 Bullet.damage += 1f
                 game.returnToPlayWorld()
                 return
             }
             // 공속 상승 버튼 클릭 시
             if (isInside(mouseX, mouseY, attackSpeedX, attackSpeedY)) {
+
+                // 총알 스피드 증가
                 Bullet.speed += 100f
                 game.returnToPlayWorld()
                 return
             }
             // 총알 갯수 상승 버튼 클릭 시
             if (isInside(mouseX, mouseY, bulletAmountX, bulletAmountY)) {
+
+                // 총알 갯수 +1
                 Player.bulletCount += 1
-                Player.bulletInterval /= Player.bulletCount
                 game.returnToPlayWorld()
                 return
             }
