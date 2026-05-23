@@ -148,10 +148,22 @@ class Player(
     var shootingTimer: Float = 0f
 
     // 다음 발사까지 걸리는 시간
-    var shootingInterval: Float = 0.25f
+    var shootingInterval: Float = 0.6f
 
     // 현재 총알을 발사 했는지 판단
     var isShooting: Boolean = false
+
+    companion object {
+
+        // 현재 총알의 갯수
+        var bulletCount: Int = 1
+
+        // 현재 연쇄적으로 나가는 총알 사이의 시간
+        var bulletTimer: Float = 0f
+
+        // 연쇄적으로 나가는 총알 사이의 시간
+        var bulletInterval: Float = 0.3f
+    }
 
     /*
      * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -188,11 +200,10 @@ class Player(
         // 다음 총알 발사 까지 걸리는 시간 관리
         if (shootingTimer > 0f) shootingTimer -= delta
 
+        if (bulletTimer > 0f) bulletTimer -= delta
+
         // 총알을 발사했는지 판단(마우스 좌클릭을 했는지 + 현재 다음 총알 발사까지 남은 시간이 없는지)
         if (InputHandler.isMouseButtonPressed(InputHandler.LEFT_BUTTON) && shootingTimer <= 0f) {
-
-            // 총알을 발사하여 다음 발사까지 남은 시간을 초기화
-            shootingTimer = shootingInterval
 
             // 총알을 발사했다는 신호
             isShooting = true

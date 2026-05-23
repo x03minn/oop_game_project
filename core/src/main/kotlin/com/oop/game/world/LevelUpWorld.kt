@@ -5,11 +5,12 @@ import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.oop.game.OopGame
-import com.oop.game.system.DifficultySystem
 import com.badlogic.gdx.graphics.Texture
+import com.oop.game.entity.Bullet
+import com.oop.game.entity.Player
 
 class LevelUpWorld(
-    private val game: OopGame
+    private val game: OopGame,
 ) : ScreenAdapter() {
     /*
     * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -27,7 +28,7 @@ class LevelUpWorld(
     //공속 상승 버튼 이미지
     private val button_attackSpeed = Texture(Gdx.files.internal("button_attackSpeed.png"))
     //총알 갯수 상승 버튼 이미지
-    private val button_bulletAmout = Texture(Gdx.files.internal("button_bulletAmount.png"))
+    private val button_bulletAmount = Texture(Gdx.files.internal("button_bulletAmount.png"))
 
     /*
      * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -111,7 +112,7 @@ class LevelUpWorld(
         batch.draw(button_attackSpeed, attackSpeedX, attackSpeedY, buttonWidth, buttonHeight)
 
         // 총알갯수 상승 버튼 그리기
-        batch.draw(button_bulletAmout, bulletAmountX, bulletAmountY, buttonWidth, buttonHeight)
+        batch.draw(button_bulletAmount, bulletAmountX, bulletAmountY, buttonWidth, buttonHeight)
 
 
         batch.end()
@@ -136,16 +137,20 @@ class LevelUpWorld(
 
             // 공격력 상승 버튼 클릭 시
             if (isInside(mouseX, mouseY, powerX, powerY)) {
+                Bullet.damage += 1f
                 game.returnToPlayWorld()
                 return
             }
             // 공속 상승 버튼 클릭 시
             if (isInside(mouseX, mouseY, attackSpeedX, attackSpeedY)) {
+                Bullet.speed += 100f
                 game.returnToPlayWorld()
                 return
             }
             // 총알 갯수 상승 버튼 클릭 시
             if (isInside(mouseX, mouseY, bulletAmountX, bulletAmountY)) {
+                Player.bulletCount += 1
+                Player.bulletInterval /= Player.bulletCount
                 game.returnToPlayWorld()
                 return
             }
@@ -175,7 +180,7 @@ class LevelUpWorld(
         batch.dispose()
         LevelUpScreen.dispose()
         button_power.dispose()
-        button_bulletAmout.dispose()
+        button_bulletAmount.dispose()
         button_attackSpeed .dispose()
     }
 }

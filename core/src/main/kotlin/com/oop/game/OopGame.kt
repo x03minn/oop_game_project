@@ -1,6 +1,8 @@
 package com.oop.game
 
 import com.badlogic.gdx.Game
+import com.oop.game.entity.Bullet
+import com.oop.game.entity.Player
 import com.oop.game.system.DifficultySystem
 import com.oop.game.world.DifficultyWorld
 import com.oop.game.world.MenuWorld

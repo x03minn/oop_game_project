@@ -62,7 +62,7 @@ import kotlin.random.Random
  * @param worldWidth   월드 전체 너비 (화면보다 크면 WASD 로 탐험 가능)
  * @param worldHeight  월드 전체 높이
  */
-class PlayWorld (
+class PlayWorld(
     private val game: OopGame,
     screenWidth: Float,
     screenHeight: Float,
@@ -166,13 +166,13 @@ class PlayWorld (
 
             // 랜덤하게 적 생성
             val enemy: Enemy = when (randomSpawnEnemies) {
-                Normals.Bloater  -> Bloater(x, y, worldWidth, worldHeight, player, true)
-                Normals.Grunt    -> Grunt(x, y, worldWidth, worldHeight, player, true)
+                Normals.Bloater -> Bloater(x, y, worldWidth, worldHeight, player, true)
+                Normals.Grunt -> Grunt(x, y, worldWidth, worldHeight, player, true)
                 Normals.Splitter -> Splitter(x, y, worldWidth, worldHeight, player, true)
             }
 
             // 일정 시간이 지난 후 적의 체력이 일괄적으로 +n 씩 올라감
-            enemy.heartIncrease((timer / 60) * heartIncrement)
+            enemy.heartIncrease((timer / 20) * heartIncrement)
 
             // 적 생성
             add(enemy)
@@ -213,43 +213,44 @@ class PlayWorld (
             }
 
             // 일정 시간이 지난 후 적의 체력이 일괄적으로 +n 씩 올라감
-            elite.heartIncrease((timer / 60) * heartIncrement)
+            elite.heartIncrease((timer / 20) * heartIncrement)
 
             // 적 생성
             add(elite)
         }
     }
 
+    /*
+     * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     * 총알 생성 프로퍼티 및 메서드
+     * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     */
+    // 발사될 총알 갯수
+    private var remainBullet = 0
 
     /** 총알 발사 메서드*/
-    fun shooting(isShooting: Boolean) {
+    fun shooting() {
 
-        if (isShooting) {
+        // 마우스의 x좌표(전체 월드 기준)
+        val worldMouseX = InputHandler.getMouseX() + offsetX
 
-            // 신호 초기화(플레이어가 총알을 발사했다는 신호)
-            player.isShooting = false
+        // 마우스의 y좌표(전체 월드 기준)
+        val worldMouseY = InputHandler.getMouseY() + offsetY
 
-            // 마우스의 x좌표(전체 월드 기준)
-            val worldMouseX = InputHandler.getMouseX() + offsetX
+        // 마우스 커서 방향으로 날라가는 총알 객체
+        val bullet = Bullet(player.x, player.y, worldMouseX, worldMouseY, worldWidth, worldHeight)
 
-            // 마우스의 y좌표(전체 월드 기준)
-            val worldMouseY = InputHandler.getMouseY() + offsetY
+        // 총알 객체 생성
+        add(bullet)
 
-            // 마우스 커서 방향으로 날라가는 총알 객체
-            val bullet = Bullet(player.x, player.y, worldMouseX, worldMouseY, worldWidth, worldHeight)
+        // 총알이 맵 밖으로 나가면 삭제
+        if (bullet.isOutOfBounds) {
 
-            // 총알 객체 생성
-            add(bullet)
+            // 총알 객체 삭제
+            remove(bullet)
 
-            // 총알이 맵 밖으로 나가면 삭제
-            if (bullet.isOutOfBounds) {
-
-                // 총알 객체 삭제
-                remove(bullet)
-
-                // 신호 초기화(경계 밖으로 나갔다는 신호)
-                bullet.isOutOfBounds = false
-            }
+            // 신호 초기화(경계 밖으로 나갔다는 신호)
+            bullet.isOutOfBounds = false
         }
     }
 
@@ -283,9 +284,14 @@ class PlayWorld (
             val randomSpawnItem = Items.entries.random()
 
             // 골라진 아이템을 생성하기
-            val item: Item = when(randomSpawnItem) {
-                Items.Heart   -> {Heart(x, y, worldWidth, worldHeight)}
-                Items.Booster -> {Booster(x, y, worldWidth, worldHeight)}
+            val item: Item = when (randomSpawnItem) {
+                Items.Heart -> {
+                    Heart(x, y, worldWidth, worldHeight)
+                }
+
+                Items.Booster -> {
+                    Booster(x, y, worldWidth, worldHeight)
+                }
             }
 
             // 아이템 생성
@@ -363,8 +369,31 @@ class PlayWorld (
         // 엘리트 적 생성
         spawnElites(killThreshold)
 
+        // 발사될 총알
+        if (player.isShooting) {
+
+            // 발사될 총알 갯수
+            remainBullet = Player.bulletCount
+
+            // 발사 신호 초기화
+            player.isShooting = false
+
+            // 다음 발사까지 걸리는 시간 초기화
+            player.shootingTimer = player.shootingInterval
+        }
+
         // 총알 발사
-        shooting(player.isShooting)
+        if (remainBullet > 0 && Player.bulletTimer <= 0f) {
+
+            // 총알 발사
+            shooting()
+
+            // 발사될 총알 수 -1
+            remainBullet--
+
+            // 총알 사이의 간격 초기화
+            Player.bulletTimer = Player.bulletInterval
+        }
 
         // 아이템 생성
         spawnItem(delta)
@@ -378,14 +407,14 @@ class PlayWorld (
                 // 이 총알과 충돌한 적 객체를 찾음
                 for (enemy in getObjects().filterIsInstance<Enemy>()) {
 
+                    // 이 적이 Bloater이고 폭발 중이거나 이 적이 고스트이고 유령화 상태라면 총알 무시
                     if (enemy is Bloater && enemy.isBoom || enemy is Ghost && enemy.isGhostMode) continue
 
                     // 살이있는 적 객체만 맞추고 맞으면 총알 객체 삭제
                     if (obj.collidesWith(enemy) && enemy.isAlive()) {
 
-                        // 그 enemy와 충돌한 bullet으로 스마트 캐스트
                         // 적 객체 데미지 입히기
-                        enemy.onDamage(obj.damage)
+                        enemy.onDamage(Bullet.damage)
 
                         // 충돌 후 총알 객체 삭제
                         remove(obj)
@@ -455,7 +484,8 @@ class PlayWorld (
                         val offset = if (i == 0) -40f else 40f
 
                         // 분열된 적
-                        val newEnemy = Splitter(enemy.x + offset, enemy.y + offset, worldWidth, worldHeight, player, false)
+                        val newEnemy =
+                            Splitter(enemy.x + offset, enemy.y + offset, worldWidth, worldHeight, player, false)
 
                         // 분열된 적의 크기 및 체력 수정
                         newEnemy.heart = newHeartCount.toFloat()
@@ -500,7 +530,7 @@ class PlayWorld (
         for (item in getObjects().filterIsInstance<Item>()) {
 
             // 플레이어와 겹친 아이템을 찾음
-            if (player.collidesWith(item)){
+            if (player.collidesWith(item)) {
 
                 when (item) {
                     is Heart -> {
@@ -543,7 +573,7 @@ class PlayWorld (
                 player.speed = player.defaultSpeed
             }
         }
-        if (player.isLevelUpReady){
+        if (player.isLevelUpReady) {
             state = GameState.Level_UP
             game.openLevelUpMenu()
             return
@@ -551,7 +581,7 @@ class PlayWorld (
     }
 
     //레벨업 state에서 벗어나는 함수
-    fun finishLevelUp(){
+    fun finishLevelUp() {
         player.isLevelUpReady = false
         state = GameState.IN_PLAY
     }
@@ -620,6 +650,7 @@ class PlayWorld (
             GameState.IN_PLAY -> {
                 // 플레이 중에는 추가로 그릴 것 없음
             }
+
             GameState.GAME_OVER -> drawGameOverOverlay()
             GameState.Level_UP -> {}
         }

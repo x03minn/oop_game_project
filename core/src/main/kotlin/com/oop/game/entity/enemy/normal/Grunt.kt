@@ -70,7 +70,7 @@ class Grunt(
             }
 
             // 플레이어가 얻는 경험치 양
-            player.gainExp(40f)
+            player.gainExp(10f)
         }
     }
 
