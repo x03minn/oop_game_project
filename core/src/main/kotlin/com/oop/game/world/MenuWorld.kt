@@ -2,11 +2,9 @@ package com.oop.game.world
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ScreenAdapter
-import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.graphics.GL20
 import com.oop.game.OopGame
 
 class MenuWorld(
@@ -21,14 +19,14 @@ class MenuWorld(
     // 텍스트 및 이미지 출력 도구
     private val batch = SpriteBatch()
 
-    // 글자 출력 도구
-    private val font = BitmapFont()
-
-    // 도형 출력 도구(버튼 배경 사각형)
-    private val shapeRenderer = ShapeRenderer()
-
     //배경 이미지
     private val background = Texture(Gdx.files.internal("menu.png"))
+    //타이틀 이미지
+    private val title = Texture(Gdx.files.internal("title.png"))
+    //게임시작 버튼 이미지
+    private val button_start = Texture(Gdx.files.internal("button_start.png"))
+    //종료 버튼 이미지
+    private val button_exit = Texture(Gdx.files.internal("button_exit.png"))
 
     /*
      * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -59,36 +57,31 @@ class MenuWorld(
         // 전체 버튼 X 좌표 (화면 중앙 기준)
         val buttonX = screenWidth * 0.5f - buttonWidth * 0.5f
 
+        //타이틀 버튼 좌표
+        val titleX = buttonX
+        val titleY = screenHeight * 0.5f + 150f
+
         // 게임시작 버튼 좌표
         val startX = buttonX
-        val startY = screenHeight * 0.5f + 30f
+        val startY = titleY - buttonHeight - buttonGap
 
         // 게임 종료 버튼 좌표
         val exitX = buttonX
         val exitY = startY - buttonHeight - buttonGap
 
-        // 화면 지우기
+        //이전화면 지워주기
         clearScreen()
 
         // 메뉴 그리기
-        drawMenu(screenWidth, screenHeight, startX, startY, exitX, exitY)
+        drawMenu(screenWidth, screenHeight, titleX, titleY, startX, startY, exitX, exitY)
 
         // 마우스 입력 처리
         handleInput( exitX, exitY, startX, startY)
     }
 
-    /**
-     * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     * 화면 지우기
-     * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     * 이전 프레임의 잔상을 어두운 배경색으로 덮어 지운다
-     */
+    //투명도 1로 화면을 칠해서 지움
     fun clearScreen() {
-
-        // 배경색 설정(어두운 남색)
-        Gdx.gl.glClearColor(0.08f, 0.08f, 0.1f, 1f)
-
-        // 화면 지우기
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
     }
 
@@ -101,42 +94,27 @@ class MenuWorld(
     fun drawMenu(
         screenWidth: Float,
         screenHeight: Float,
+        titleX: Float,
+        titleY: Float,
         startX: Float,
         startY: Float,
         exitX: Float,
-        exitY: Float,
+        exitY: Float
     ) {
 
         // 배경 이미지 그리기
         batch.begin()
         batch.draw(background, 0f, 0f, screenWidth, screenHeight)
-        batch.end()
 
-        // 버튼 배경 사각형 그리기
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
+        //게임 타이틀 그리기
+        batch.draw(title, titleX + 99f, titleY, buttonWidth - 200f, buttonHeight)
 
-        // 게임 시작 버튼 배경
-        shapeRenderer.setColor(0.4f, 0.4f, 0.45f, 1.0f)
-        shapeRenderer.rect(startX, startY, buttonWidth, buttonHeight)
+        // 게임 시작 버튼 그리기
+        batch.draw(button_start, startX, startY, buttonWidth, buttonHeight)
 
-        // 게임 종료 버튼 배경
-        shapeRenderer.setColor(0.25f, 0.25f, 0.3f, 1.0f)
-        shapeRenderer.rect(exitX, exitY, buttonWidth, buttonHeight)
+        // 게임 종료 버튼 그리기
+        batch.draw(button_exit, exitX, exitY, buttonWidth, buttonHeight)
 
-        shapeRenderer.end()
-
-        // 텍스트 그리기
-        batch.begin()
-        font.setColor(1.0f, 1.0f, 1.0f, 1.0f)
-
-        // 타이틀
-        font.draw(batch, "Dodge Enemy", screenWidth * 0.5f - 40f, screenHeight * 0.5f + 180f)
-
-        // 게임 종료 버튼 텍스트
-        font.draw(batch, "Exit", exitX + 138f, exitY + 40f)
-
-        // 게임 시작 버튼 텍스트
-        font.draw(batch, "Game Start", startX + 110f, startY + 40f)
 
         batch.end()
     }
@@ -193,8 +171,9 @@ class MenuWorld(
      */
     override fun dispose() {
         batch.dispose()
-        font.dispose()
-        shapeRenderer.dispose()
         background.dispose()
+        button_start.dispose()
+        button_exit.dispose()
+        title.dispose()
     }
 }

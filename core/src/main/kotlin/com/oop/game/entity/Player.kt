@@ -53,6 +53,9 @@ class Player(
     // 다음 레벨까지 채워야하는 경험치 양(난도 별로 다름)
     var expMax: Float = difficultySystem.playerExpMax
 
+    // 레벨업 시 경험치 양의 증가량
+    var expIncrease: Float = difficultySystem.expIncrease
+
     // 플레이어가 레벨업 했다는 신호
     var isLevelUpReady: Boolean = false
 
@@ -80,7 +83,7 @@ class Player(
         exp -= expMax
 
         // 다음 레벨 까지 얻어야 하는 경험치 양 증가
-        expMax *= 1.2f
+        expMax *= expIncrease
 
         // 플레이어의 현재 레벨 증가
         level++
@@ -148,10 +151,22 @@ class Player(
     var shootingTimer: Float = 0f
 
     // 다음 발사까지 걸리는 시간
-    var shootingInterval: Float = 0.25f
+    var shootingInterval: Float = 0.6f
 
     // 현재 총알을 발사 했는지 판단
     var isShooting: Boolean = false
+
+    companion object {
+
+        // 현재 총알의 갯수
+        var bulletCount: Int = 1
+
+        // 현재 연쇄적으로 나가는 총알 사이의 시간
+        var bulletTimer: Float = 0f
+
+        // 연쇄적으로 나가는 총알 사이의 시간
+        var bulletInterval: Float = 0.3f
+    }
 
     /*
      * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -188,11 +203,10 @@ class Player(
         // 다음 총알 발사 까지 걸리는 시간 관리
         if (shootingTimer > 0f) shootingTimer -= delta
 
+        if (bulletTimer > 0f) bulletTimer -= delta
+
         // 총알을 발사했는지 판단(마우스 좌클릭을 했는지 + 현재 다음 총알 발사까지 남은 시간이 없는지)
         if (InputHandler.isMouseButtonPressed(InputHandler.LEFT_BUTTON) && shootingTimer <= 0f) {
-
-            // 총알을 발사하여 다음 발사까지 남은 시간을 초기화
-            shootingTimer = shootingInterval
 
             // 총알을 발사했다는 신호
             isShooting = true

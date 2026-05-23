@@ -106,9 +106,11 @@ class Bloater(
         // 하트 수 -amount
         super.onDamage(amount)
 
-        // 맞을 수록 적의 크기가 커짐
-        width *= 1.4f
-        height *= 1.4f
+        // 맞을 수록 적의 크기가 커짐(크기가 130 x 130 이하일 경우)
+        if (width <= 130 && height <= 130) {
+            width *= 1.2f
+            height *= 1.2f
+        }
 
         // 적 객체 사망 시 발생
         if (!isAlive()) {
@@ -131,7 +133,7 @@ class Bloater(
             }
 
             // 플레이어가 얻는 경험치 양
-            player.gainExp(50f)
+            player.gainExp(15f)
         }
     }
 

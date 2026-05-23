@@ -5,11 +5,12 @@ import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.oop.game.OopGame
-import com.oop.game.system.DifficultySystem
 import com.badlogic.gdx.graphics.Texture
+import com.oop.game.entity.Bullet
+import com.oop.game.entity.Player
 
-class DifficultyWorld(
-    private val game: OopGame
+class LevelUpWorld(
+    private val game: OopGame,
 ) : ScreenAdapter() {
     /*
     * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -21,15 +22,13 @@ class DifficultyWorld(
 
 
     //배경 이미지
-    private val background = Texture(Gdx.files.internal("menu.png"))
-    //이지모드 버튼 이미지
-    private val button_easy = Texture(Gdx.files.internal("button_easy.png"))
-    //노멀모드 버튼 이미지
-    private val button_normal = Texture(Gdx.files.internal("button_normal.png"))
-    //하드모드 버튼 이미지
-    private val button_hard = Texture(Gdx.files.internal("button_hard.png"))
-    //back 버튼 이미지
-    private val button_back = Texture(Gdx.files.internal("button_back.png"))
+    private val LevelUpScreen = Texture(Gdx.files.internal("LevelUpScreen.png"))
+    //공격력 상승 버튼 이미지
+    private val button_power = Texture(Gdx.files.internal("button_power.png"))
+    //공속 상승 버튼 이미지
+    private val button_attackSpeed = Texture(Gdx.files.internal("button_attackSpeed.png"))
+    //총알 갯수 상승 버튼 이미지
+    private val button_bulletAmount = Texture(Gdx.files.internal("button_bulletAmount.png"))
 
     /*
      * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -60,33 +59,27 @@ class DifficultyWorld(
         // 전체 버튼 X 좌표 (화면 중앙 기준)
         val buttonX = screenWidth * 0.5f - buttonWidth * 0.5f
 
-        // 이지모드 버튼 좌표
-        val easyX = buttonX
-        val easyY = screenHeight * 0.5f + 150f
+        // 공격력 상승 버튼 좌표
+        val powerX = buttonX
+        val powerY = screenHeight * 0.5f + 20f
 
-        // 노멀모드 버튼 좌표
-        val normalX = buttonX
-        val normalY = easyY - buttonHeight - buttonGap
+        // 공속 상승 버튼 좌표
+        val attackSpeedX = buttonX
+        val attackSpeedY = powerY - buttonHeight - buttonGap
 
-        //하드모드 버튼 좌표
-        val hardX = buttonX
-        val hardY = normalY - buttonHeight - buttonGap
+        // 총알 갯수 상승 버튼 좌표
+        val bulletAmountX = buttonX
+        val bulletAmountY = attackSpeedY - buttonHeight - buttonGap
 
-        //뒤로가기 버튼 좌표
-        val backX = buttonX
-        val backY = hardY - buttonHeight - buttonGap
-
-        //화면 지우기
-        clearScreen()
 
         // 메뉴 그리기
-        drawMenu(screenWidth, screenHeight, easyX, easyY, normalX, normalY, hardX, hardY, backX, backY)
+        drawMenu(screenWidth, screenHeight, powerX, powerY, attackSpeedX, attackSpeedY, bulletAmountX, bulletAmountY)
 
         // 마우스 입력 처리
-        handleInput( easyX, easyY, normalX, normalY, hardX, hardY, backX, backY)
+        handleInput( powerX, powerY, attackSpeedX, attackSpeedY, bulletAmountX, bulletAmountY)
     }
 
-    //투명도 1로 화면을 칠해서 지움
+    //검은색으로 화면을 칠해서 지움
     fun clearScreen() {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
@@ -101,30 +94,26 @@ class DifficultyWorld(
     fun drawMenu(
         screenWidth: Float,
         screenHeight: Float,
-        easyX: Float,
-        easyY: Float,
-        normalX: Float,
-        normalY: Float,
-        hardX: Float,
-        hardY: Float,
-        backX: Float,
-        backY: Float
+        powerX: Float,
+        powerY: Float,
+        attackSpeedX: Float,
+        attackSpeedY: Float,
+        bulletAmountX: Float,
+        bulletAmountY: Float
     ) {
         // 배경 이미지 그리기
         batch.begin()
-        batch.draw(background, 0f, 0f, screenWidth, screenHeight)
+        batch.draw(LevelUpScreen, 0f, 0f, screenWidth, screenHeight)
 
-        // 이지모드 버튼 그리기
-        batch.draw(button_easy, easyX, easyY, buttonWidth, buttonHeight)
+        // 공격력 상승 버튼 그리기
+        batch.draw(button_power, powerX, powerY, buttonWidth, buttonHeight)
 
-        // 노멀모드 버튼 그리기
-        batch.draw(button_normal, normalX, normalY, buttonWidth, buttonHeight)
+        // 공속 상승 버튼 그리기
+        batch.draw(button_attackSpeed, attackSpeedX, attackSpeedY, buttonWidth, buttonHeight)
 
-        // 하드모드 버튼 그리기
-        batch.draw(button_hard, hardX, hardY, buttonWidth, buttonHeight)
+        // 총알갯수 상승 버튼 그리기
+        batch.draw(button_bulletAmount, bulletAmountX, bulletAmountY, buttonWidth, buttonHeight)
 
-        // back 버튼 그리기
-        batch.draw(button_back, backX, backY, buttonWidth, buttonHeight)
 
         batch.end()
     }
@@ -135,7 +124,7 @@ class DifficultyWorld(
      * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      * 클릭한 위치가 버튼 안에 있으면 해당 동작 실행
      */
-    private fun handleInput(easyX: Float, easyY: Float, normalX: Float, normalY: Float, hardX: Float, hardY: Float, backX: Float, backY: Float) {
+    private fun handleInput(powerX: Float, powerY: Float, attackSpeedX: Float, attackSpeedY: Float, bulletAmountX: Float, bulletAmountY: Float) {
 
         // 마우스 클릭 여부 확인
         if (Gdx.input.justTouched()) {
@@ -146,24 +135,23 @@ class DifficultyWorld(
             // 마우스 y 좌표(LibGDX y축은 위아래가 반대라 변환)
             val mouseY = Gdx.graphics.height - Gdx.input.y.toFloat()
 
-            // 이지모드 버튼 클릭 시
-            if (isInside(mouseX, mouseY, easyX, easyY)) {
-                game.startGame(DifficultySystem.Easy)
+            // 공격력 상승 버튼 클릭 시
+            if (isInside(mouseX, mouseY, powerX, powerY)) {
+                Bullet.damage += 1f
+                game.returnToPlayWorld()
                 return
             }
-            // 노멀모드 버튼 클릭 시
-            if (isInside(mouseX, mouseY, normalX, normalY)) {
-                game.startGame(DifficultySystem.Normal)
+            // 공속 상승 버튼 클릭 시
+            if (isInside(mouseX, mouseY, attackSpeedX, attackSpeedY)) {
+                Bullet.speed += 100f
+                game.returnToPlayWorld()
                 return
             }
-            // 하드모드 버튼 클릭 시
-            if (isInside(mouseX, mouseY, hardX, hardY)) {
-                game.startGame(DifficultySystem.Hard)
-                return
-            }
-            // back버튼 클릭 시
-            if (isInside(mouseX, mouseY, backX, backY)) {
-                game.create()
+            // 총알 갯수 상승 버튼 클릭 시
+            if (isInside(mouseX, mouseY, bulletAmountX, bulletAmountY)) {
+                Player.bulletCount += 1
+                Player.bulletInterval /= Player.bulletCount
+                game.returnToPlayWorld()
                 return
             }
         }
@@ -190,10 +178,9 @@ class DifficultyWorld(
      */
     override fun dispose() {
         batch.dispose()
-        background.dispose()
-        button_easy.dispose()
-        button_normal.dispose()
-        button_hard.dispose()
-        button_back.dispose()
+        LevelUpScreen.dispose()
+        button_power.dispose()
+        button_bulletAmount.dispose()
+        button_attackSpeed .dispose()
     }
 }

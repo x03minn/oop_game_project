@@ -83,7 +83,7 @@ class Splitter(
             }
 
             // 플레이어가 얻는 경험치 양
-            player.gainExp(10f)
+            player.gainExp(5f)
 
             // 기존 체력을 2로 나눈 몫이 0보다 크면 분열 신호 보내기
             if ((defaultHeart / 2) > 0) {
