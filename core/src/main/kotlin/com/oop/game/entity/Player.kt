@@ -196,10 +196,6 @@ class Player(
 
             // 총알을 발사했다는 신호
             isShooting = true
-
-            // 플레이어 객체를 월드 경계 안쪽으로 가두기
-            x = x.coerceIn(0f, worldWidth - width)
-            y = y.coerceIn(0f, worldHeight - height)
         }
     }
 
