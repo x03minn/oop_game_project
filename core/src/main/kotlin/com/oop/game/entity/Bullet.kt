@@ -3,8 +3,8 @@ package com.oop.game.entity
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Vector2
 import com.oop.game.GameObject
+import kotlin.math.sqrt
 
 /**
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -62,7 +62,16 @@ class Bullet(
     }
 
     // 총알의 이동 방향(총알의 방향 단위 벡터)
-    val dir: Vector2 = Vector2(mouseX - (playerX + 25f), mouseY - (playerY + 25f)).nor()
+    // 마우스의 좌표와 플레이어 좌표의 차이
+    val differenceX: Float = mouseX - (playerX + 25f)
+    val differenceY: Float = mouseY - (playerY + 25f)
+
+    // 두 좌표의 길이
+    val length: Float = sqrt(differenceX * differenceX + differenceY * differenceY)
+
+    // 벡터의 정규화
+    val dirX = differenceX / length
+    val dirY = differenceY / length
 
     // 총알이 월드 맵 경계에 도달 했는지 판단
     var isOutOfBounds: Boolean = false
@@ -75,8 +84,8 @@ class Bullet(
     override fun update(delta: Float) {
 
         // 총알의 이동
-        x += dir.x * speed * delta
-        y += dir.y * speed * delta
+        x += dirX * speed * delta
+        y += dirY * speed * delta
 
         // 총알이 맵 경계에 도달했다는 신호
         if (x !in 0f .. worldWidth || y !in 0f .. worldHeight) {
