@@ -24,14 +24,15 @@ import com.oop.game.GameObject
  */
 class Bullet(
     // 플레이어의 좌표
-    playerX: Float,
+    playerX: Float ,
     playerY: Float,
     // 마우스의 좌표(현재 카매라 기준이 아니라 월드 전체 기준)
     mouseX: Float,
     mouseY: Float,
     private val worldWidth: Float,
     private val worldHeight: Float
-) : GameObject(playerX, playerY, 15f, 15f) {
+    //플레이어 크기 50,50의 절반인 25,25에서 총알크기 절반 인 7.5,7.5 빼서 중심에서 나가게 함
+) : GameObject(playerX + 17.5f, playerY + 17.5f, 15f, 15f) {
 
     /*
      * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
