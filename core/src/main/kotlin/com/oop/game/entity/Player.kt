@@ -21,13 +21,10 @@ import com.oop.game.system.DifficultySystem
  *   ▸ 객체가 사라질 때 dispose() 로 GPU 자원 해제 — 기본 GameObject.dispose()를 override.
  *   ▸ batch.draw(texture, x, y, w, h) 한 줄로 이미지를 그린다.
  *
- * @param worldWidth/Height: 월드 크기를 받아 경계 밖으로 못 나가게 제한하는 용도.
  */
 class Player(
     x: Float,
     y: Float,
-    private val worldWidth: Float,
-    private val worldHeight: Float,
     private val difficultySystem: DifficultySystem,
 ) : GameObject(x, y, 50f, 50f), HeartSystem {
 
