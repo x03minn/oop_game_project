@@ -1,13 +1,12 @@
 package com.oop.game
 
 import com.badlogic.gdx.Game
-import com.oop.game.entity.Bullet
-import com.oop.game.entity.Player
 import com.oop.game.system.DifficultySystem
 import com.oop.game.world.DifficultyWorld
 import com.oop.game.world.MenuWorld
 import com.oop.game.world.PlayWorld
 import com.oop.game.world.LevelUpWorld
+import com.oop.game.world.GameOverWorld
 
 /**
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -83,6 +82,8 @@ class OopGame : Game() {
      * PlayWorld 를 생성해 현재 화면으로 전환한다
      */
     fun startGame(difficultySystem: DifficultySystem) {
+        com.oop.game.entity.Count.killCount=0
+        com.oop.game.entity.Count.killPoint=0
 
         // PlayWorld 생성(화면 크기와 월드 크기 전달)
         val playWorld = PlayWorld(
@@ -104,6 +105,10 @@ class OopGame : Game() {
         val playWorld = currentPlayWorld?: return
         playWorld.finishLevelUp()
         setScreen(playWorld)
+    }
+    fun gameOver(survivalTime: Int, killCount: Int){
+        setScreen(com.oop.game.world.GameOverWorld(this, survivalTime, killCount))
+
     }
 
 

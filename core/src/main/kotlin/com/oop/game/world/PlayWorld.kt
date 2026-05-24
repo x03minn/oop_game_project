@@ -18,11 +18,12 @@ import com.oop.game.entity.entityEnum.Elites
 import com.oop.game.entity.entityEnum.Normals
 import com.oop.game.entity.enemy.elite.Brute
 import com.oop.game.entity.enemy.elite.Ghost
-import com.oop.game.entity.enemy.nomal.Bloater
-import com.oop.game.entity.enemy.nomal.Grunt
-import com.oop.game.entity.enemy.nomal.Splitter
+import com.oop.game.entity.enemy.normal.Bloater
+import com.oop.game.entity.enemy.normal.Grunt
+import com.oop.game.entity.enemy.normal.Splitter
 import com.oop.game.entity.item.Heart
 import com.oop.game.entity.item.Booster
+import com.oop.game.world.PlayWorld.GameState.*
 import kotlin.math.floor
 import kotlin.random.Random
 
@@ -334,7 +335,7 @@ class PlayWorld(
         when (state) {
             GameState.IN_PLAY -> updateInPlay(delta)
             GameState.Level_UP -> {}
-            GameState.GAME_OVER -> updateGameOver()
+            GameState.GAME_OVER -> {}
         }
     }
 
@@ -445,8 +446,8 @@ class PlayWorld(
                 // 플레이어 사망 시
                 if (!player.isAlive()) {
 
-                    // 게임 오버 상태로 전환
-                    state = GameState.GAME_OVER
+                    game.gameOver(survivalTime = timer, killCount = Count.killPoint)
+                    return
                 }
             }
         }
@@ -586,14 +587,7 @@ class PlayWorld(
         state = GameState.IN_PLAY
     }
 
-    /** GAME_OVER 상태에서 매 프레임 처리 — ESC 입력만 감시한다. */
-    private fun updateGameOver() {
-        // ESC 키가 '막 눌린 순간' 앱 종료.
-        //   isKeyJustPressed 로 한 이유: 누르고 있는 동안 매 프레임 exit 호출되지 않게.
-        if (InputHandler.isKeyJustPressed(InputHandler.ESCAPE)) {
-            Gdx.app.exit()
-        }
-    }
+
 
     /**
      * 배경 그리기 — GameWorld.drawBackground(batch) 를 override.
@@ -647,12 +641,13 @@ class PlayWorld(
 
         // ── 상태별로 그리는 것이 다름 ──
         when (state) {
-            GameState.IN_PLAY -> {
+            IN_PLAY -> {
                 // 플레이 중에는 추가로 그릴 것 없음
             }
 
-            GameState.GAME_OVER -> drawGameOverOverlay()
-            GameState.Level_UP -> {}
+
+            Level_UP -> {}
+            GAME_OVER -> {}
         }
     }
 
@@ -693,24 +688,7 @@ class PlayWorld(
         )
     }
 
-    /** 게임 오버 시 화면 중앙에 띄우는 안내 메시지. */
-    private fun drawGameOverOverlay() {
-        drawTextOnScreen(
-            text = "Game Over!",
-            x = screenWidth / 2 - 80f,
-            y = screenHeight / 2,
-            color = Color.WHITE,
-            scale = 2f
-        )
 
-        drawTextOnScreen(
-            text = "Press ESC to exit",
-            x = screenWidth / 2 - 70f,
-            y = screenHeight / 2 - 40f,
-            color = Color.WHITE,
-            scale = 1f
-        )
-    }
 
     /** 화면이 닫힐 때 — 부모도 dispose 한 뒤 우리만의 자원도 해제. */
     override fun dispose() {
