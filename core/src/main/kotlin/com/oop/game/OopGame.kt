@@ -82,6 +82,8 @@ class OopGame : Game() {
      * PlayWorld 를 생성해 현재 화면으로 전환한다
      */
     fun startGame(difficultySystem: DifficultySystem) {
+        com.oop.game.entity.Count.killCount=0
+        com.oop.game.entity.Count.killPoint=0
 
         // PlayWorld 생성(화면 크기와 월드 크기 전달)
         val playWorld = PlayWorld(
