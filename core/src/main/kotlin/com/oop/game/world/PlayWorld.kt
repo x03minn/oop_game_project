@@ -80,20 +80,24 @@ class PlayWorld(
     // 게임의 상태는 | 1. 시작 메뉴 | 2. 게임 중 | 3. 레벨 업 | 4. 게임 오버 |
     private enum class GameState {
         IN_PLAY,
-        Level_UP,
+        LEVEL_UP,
         GAME_OVER
     }
 
     /*
      * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     * 생존 시간 프로퍼티
+     * 생존 시간 companion object
      * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      */
-    // 현재 생존 시간(Float형)
-    private var timeFloat: Float = 0f
 
-    // 현재 생존 시간(Int형)
-    private var timer: Int = 0
+    companion object {
+
+        // 현재 생존 시간(Float형)
+        var timeFloat: Float = 0f
+
+        // 현재 생존 시간(Int형)
+        var timer: Int = 0
+    }
 
     /*
      * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -310,7 +314,7 @@ class PlayWorld(
     val boosterTime: Float = 4f
 
     // 현재 게임 상태
-    private var state = GameState.IN_PLAY
+    private var state = IN_PLAY
 
     // ── 체스판 배경 설정 (drawBackground() 에서 사용) ──
     //   이게 없으면 검은 배경뿐이라 카메라(WASD) 이동이 눈에 안 보인다.
@@ -333,9 +337,9 @@ class PlayWorld(
     override fun update(delta: Float) {
         super.update(delta)
         when (state) {
-            GameState.IN_PLAY -> updateInPlay(delta)
-            GameState.Level_UP -> {}
-            GameState.GAME_OVER -> {}
+            IN_PLAY -> updateInPlay(delta)
+            LEVEL_UP -> {}
+            GAME_OVER -> {}
         }
     }
 
@@ -575,7 +579,7 @@ class PlayWorld(
             }
         }
         if (player.isLevelUpReady) {
-            state = GameState.Level_UP
+            state = LEVEL_UP
             game.openLevelUpMenu()
             return
         }
@@ -584,7 +588,7 @@ class PlayWorld(
     //레벨업 state에서 벗어나는 함수
     fun finishLevelUp() {
         player.isLevelUpReady = false
-        state = GameState.IN_PLAY
+        state = IN_PLAY
     }
 
 
@@ -644,9 +648,7 @@ class PlayWorld(
             IN_PLAY -> {
                 // 플레이 중에는 추가로 그릴 것 없음
             }
-
-
-            Level_UP -> {}
+            LEVEL_UP -> {}
             GAME_OVER -> {}
         }
     }

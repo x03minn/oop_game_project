@@ -36,7 +36,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
  *    ② update(delta) — 각 객체 갱신, 상호작용, 정리 (서브클래스 override 가능)
  *    ③ batch.begin
  *    ④ drawBackground(batch) — 서브클래스가 그리는 배경 (필수 구현)
- *    ⑤ 모든 게임 객체를 carmera offset 적용해 draw
+ *    ⑤ 모든 게임 객체를 camera offset 적용해 draw
  *    ⑥ batch.end
  *
  *  학생이 보통 override 하는 것:

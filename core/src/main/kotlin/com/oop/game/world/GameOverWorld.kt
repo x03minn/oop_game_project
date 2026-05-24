@@ -9,11 +9,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.Color
 import com.oop.game.OopGame
 import com.oop.game.InputHandler
+import com.oop.game.entity.Count
 
 class GameOverWorld(
-    private val game: OopGame,
-    private val survivalTime: Int,
-    private val killCount: Int
+    private val game: OopGame
 ) : ScreenAdapter() {
     /*
     * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -108,11 +107,11 @@ class GameOverWorld(
         // 생존 시간 출력
         font.data.setScale(1.6f)
         font.color = Color.WHITE
-        font.draw(batch, "Survival Time : $survivalTime Sec", screenWidth * 0.5f - 150f, screenHeight * 0.50f)
+        font.draw(batch, "Survival Time : ${PlayWorld.timer} Sec", screenWidth * 0.5f - 150f, screenHeight * 0.50f)
 
         // 처치 수 출력
         font.color = Color.GOLD
-        font.draw(batch, "Total Kills    : $killCount", screenWidth * 0.5f - 110f, screenHeight * 0.43f)
+        font.draw(batch, "Total Kills    : ${Count.killPoint}", screenWidth * 0.5f - 110f, screenHeight * 0.43f)
 
         // 뒤로가기 버튼 그리기
         batch.draw(button_back_menu, backX, backY, buttonWidth, buttonHeight)
@@ -143,6 +142,15 @@ class GameOverWorld(
 
             // 뒤로가기 버튼 클릭 시
             if (isInside(mouseX, mouseY, backX, backY)) {
+
+                // 킬 카운트 관련 초기화
+                Count.killPoint = 0
+                Count.killCount = 0
+
+                // 시간 관련 초기화
+                PlayWorld.timer = 0
+                PlayWorld.timeFloat = 0f
+
                 game.create()
                 return
             }

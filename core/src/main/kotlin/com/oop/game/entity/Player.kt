@@ -165,7 +165,7 @@ class Player(
         var bulletTimer: Float = 0f
 
         // 연쇄적으로 나가는 총알 사이의 시간
-        var bulletInterval: Float = 0.2f
+        var bulletInterval: Float = 0.1f
     }
 
     /*

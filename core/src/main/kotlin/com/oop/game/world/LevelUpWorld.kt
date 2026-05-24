@@ -152,7 +152,6 @@ class LevelUpWorld(
             // 총알 갯수 상승 버튼 클릭 시
             if (isInside(mouseX, mouseY, bulletAmountX, bulletAmountY)) {
                 Player.bulletCount += 1
-                Player.bulletInterval /= Player.bulletCount
                 game.returnToPlayWorld()
                 return
             }

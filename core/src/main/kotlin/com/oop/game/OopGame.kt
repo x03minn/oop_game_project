@@ -105,7 +105,7 @@ class OopGame : Game() {
         setScreen(playWorld)
     }
     fun gameOver(survivalTime: Int, killCount: Int){
-        setScreen(com.oop.game.world.GameOverWorld(this, survivalTime, killCount))
+        setScreen(com.oop.game.world.GameOverWorld(this))
 
     }
 
