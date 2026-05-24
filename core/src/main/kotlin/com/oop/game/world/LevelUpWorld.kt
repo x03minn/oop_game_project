@@ -71,6 +71,8 @@ class LevelUpWorld(
         val bulletAmountX = buttonX
         val bulletAmountY = attackSpeedY - buttonHeight - buttonGap
 
+        //이전 화면 지우기
+        clearScreen()
 
         // 메뉴 그리기
         drawMenu(screenWidth, screenHeight, powerX, powerY, attackSpeedX, attackSpeedY, bulletAmountX, bulletAmountY)
