@@ -2,9 +2,9 @@ package com.oop.game.entity
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Vector2
 import com.oop.game.GameObject
 import com.oop.game.system.HeartSystem
+import kotlin.math.sqrt
 
 /**
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -86,15 +86,23 @@ abstract class Enemy(
      */
     override fun update(delta: Float) {
 
-        // 적 위치에서 플레이어 방향으로의 단위 벡터 계산
-        // Vector2((플레이어x + 25f) - (적x + 너비의 절반), (플레이어y + 25f) - (적y + 적 높이의 절반)) → nor()로 정규화하여 방향만 추출
-        val dir = Vector2((player.x + 25f) - (x + (width / 2)), (player.y + 25) - (y + (height / 2))).nor()
+        // 적 중심 위치에서 플레이어 중심 방향으로의 단위 벡터 계산
+        // 플레이어의 중심에서 적의 중심까지의 좌표 차이
+        val differenceX: Float = (player.x + 25f) - (x + (width / 2))
+        val differenceY: Float = (player.y + 25f) - (y + (height / 2))
+
+        // 두 좌표의 길이
+        val length: Float = sqrt(differenceX * differenceX + differenceY * differenceY)
+
+        // 벡터의 정규화
+        val dirX = differenceX / length
+        val dirY = differenceY / length
 
         // 적의 x축 이동
-        x += dir.x * speed * delta
+        x += dirX * speed * delta
 
         // 적의 y축 이동
-        y += dir.y * speed * delta
+        y += dirY * speed * delta
 
         // 적 객체를 월드 경계 안쪽으로 가두기
         x = x.coerceIn(0f, worldWidth - width)
