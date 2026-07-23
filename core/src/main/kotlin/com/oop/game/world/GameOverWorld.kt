@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.Color
 import com.oop.game.OopGame
 import com.oop.game.InputHandler
 import com.oop.game.entity.Count
+import com.oop.game.entity.Player
+import com.oop.game.entity.Bullet
 
 class GameOverWorld(
     private val game: OopGame
@@ -150,6 +152,11 @@ class GameOverWorld(
                 // 시간 관련 초기화
                 PlayWorld.timer = 0
                 PlayWorld.timeFloat = 0f
+
+                // 레벨 업 관련 초기화
+                Player.bulletCount = 1
+                Bullet.damage = 1f
+                Bullet.speed = 1000f
 
                 game.create()
                 return

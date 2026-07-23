@@ -65,7 +65,7 @@ class Bloater(
     var frameDuration: Float = 0.08f
 
     // 폭발 텍스쳐 모음
-    val explosionTextures = listOf(
+    val explosionTextures: List<Texture> = listOf(
         Texture(Gdx.files.internal("explosion_0.png")),
         Texture(Gdx.files.internal("explosion_1.png")),
         Texture(Gdx.files.internal("explosion_2.png")),

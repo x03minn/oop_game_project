@@ -110,8 +110,6 @@ class PlayWorld(
         // 가로/세로 50 의 절반을 빼서 정확히 중앙
         x = worldWidth / 2 - 25f,
         y = worldHeight / 2 - 25f,
-        worldWidth = worldWidth,
-        worldHeight = worldHeight,
         difficultySystem = difficultySystem
     )
 
@@ -123,7 +121,7 @@ class PlayWorld(
     // 현재 남은 적 스폰 시간
     var enemySpawnTimer: Float = 0f
 
-    // 적의 스폰 속도(난이도 별 수정)
+    // 적의 스폰 속도
     var enemySpawnSpeed: Float = 3f
 
     // 일정 시간 후 늘어나는 적의 체력 증가폭(난이도 별 수정)
@@ -205,7 +203,7 @@ class PlayWorld(
             // 적의 y좌표
             val y = randomSpawnY()
 
-            // 프레임 마다 한 번만 생성(킬 카운트를 초기화 시킴)
+            // 10마리 당 한 번만 생성(킬 카운트를 초기화 시킴)
             Count.killCount = 0
 
             // enum class Elites에서 랜덤하게 엘리트 고르기
@@ -267,7 +265,7 @@ class PlayWorld(
     // 현재 남은 적 스폰 시간
     var itemSpawnTimer: Float = 5f
 
-    // 적의 스폰 속도(난이도 별 수정)
+    // 아이템의 스폰 속도
     var itemSpawnSpeed: Float = 10f
 
     /** 아이템 생성 메서드*/
@@ -387,7 +385,7 @@ class PlayWorld(
             player.shootingTimer = player.shootingInterval
         }
 
-        // 총알 발사
+        // 총알 발사(remainBullet은 한번 클릭에 발사 될 총알의 갯수, bullet
         if (remainBullet > 0 && Player.bulletTimer <= 0f) {
 
             // 총알 발사
